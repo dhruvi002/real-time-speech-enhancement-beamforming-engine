@@ -14,4 +14,7 @@ test_output.wav
 .DS_Store
 *.tar.gz
 *.zip
-EOF
+EOFcpp_inference/build/
+*.onnx
+*.onnx.data
+demo_portfolio.html

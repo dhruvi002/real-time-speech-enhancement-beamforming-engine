@@ -1,1 +1,0 @@
-/usr/bin/c++ -I/opt/homebrew/include/onnxruntime -O3 -march=native -DNDEBUG -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/speech_enhancer.dir/src/speech_enhancer.cpp.o -o speech_enhancer  /opt/homebrew/lib/libonnxruntime.dylib -lm
