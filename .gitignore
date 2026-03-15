@@ -1,0 +1,17 @@
+data/precomputed/
+data/rirs/
+data/manifests/
+LibriSpeech/
+MS-SNSD/
+checkpoints/
+logs/
+__pycache__/
+*.pyc
+*.npy
+model.onnx
+test_input.wav
+test_output.wav
+.DS_Store
+*.tar.gz
+*.zip
+EOF

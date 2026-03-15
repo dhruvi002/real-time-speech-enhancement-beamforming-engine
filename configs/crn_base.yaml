@@ -1,0 +1,67 @@
+# CRN Speech Enhancement — Base Config
+# configs/crn_base.yaml
+
+# ── Audio ──────────────────────────────────────────────────────────────────
+audio:
+  sample_rate: 16000
+  n_fft: 512                   # FFT size → 32ms window at 16kHz
+  hop_length: 160              # 10ms hop → 20ms frame with 50% overlap
+  win_length: 320              # 20ms window
+  window: hann
+  n_mics: 4                    # microphone array channels
+
+# ── Model ──────────────────────────────────────────────────────────────────
+model:
+  name: CRN
+  in_channels: 2               # real + imag of beamformed signal
+  encoder_channels: [16, 32, 64, 128, 256]
+  encoder_kernel: [2, 3]       # (time, freq) kernel
+  lstm_hidden: 256
+  lstm_layers: 2
+  decoder_channels: [128, 64, 32, 16, 1]
+  mask_type: CRM               # Complex Ratio Mask
+
+# ── Training ───────────────────────────────────────────────────────────────
+training:
+  seed: 42
+  batch_size: 16
+  num_epochs: 100
+  learning_rate: 5.0e-4
+  lr_scheduler: cosine
+  warmup_epochs: 5
+  gradient_clip: 5.0
+  num_workers: 4
+  pin_memory: true
+  mixed_precision: true        # fp16 training
+
+# ── Loss ───────────────────────────────────────────────────────────────────
+loss:
+  sisnr_weight: 0.8
+  mag_weight: 0.1
+  phase_weight: 0.1
+
+# ── Data ───────────────────────────────────────────────────────────────────
+data:
+  train_manifest: data/manifests/train.json
+  val_manifest: data/manifests/val.json
+  test_manifest: data/manifests/test.json
+  n_train_pairs: 100000
+  n_val_pairs: 10000
+  n_test_pairs: 10000
+  snr_range: [-5, 20]          # dB, uniform sampling
+  rir_dir: data/rirs
+  rir_prob: 0.8                # probability of applying RIR augmentation
+  max_duration: 4.0            # seconds
+
+# ── Checkpointing ──────────────────────────────────────────────────────────
+checkpoint:
+  dir: checkpoints/
+  save_every: 5
+  keep_last: 3
+  metric: pesq                 # monitor for best model
+
+# ── Logging ────────────────────────────────────────────────────────────────
+logging:
+  log_dir: logs/
+  log_every: 100               # steps
+  eval_every: 1                # epochs

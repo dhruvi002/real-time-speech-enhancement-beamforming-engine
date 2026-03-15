@@ -1,0 +1,60 @@
+# CRN Speech Enhancement — Small Config (CPU, M3 MacBook Air)
+# configs/crn_small.yaml
+
+audio:
+  sample_rate: 16000
+  n_fft: 256
+  hop_length: 128
+  win_length: 256
+  window: hann
+  n_mics: 4
+
+model:
+  name: CRN
+  in_channels: 2
+  encoder_channels: [8, 16, 32, 64, 128]
+  encoder_kernel: [2, 3]
+  lstm_hidden: 64
+  lstm_layers: 1
+  decoder_channels: [64, 32, 16, 8, 1]
+  mask_type: CRM
+
+training:
+  seed: 42
+  batch_size: 16
+  num_epochs: 30
+  learning_rate: 5.0e-4
+  lr_scheduler: cosine
+  warmup_epochs: 3
+  gradient_clip: 5.0
+  num_workers: 4
+  pin_memory: false
+  mixed_precision: false
+
+loss:
+  sisnr_weight: 0.8
+  mag_weight: 0.1
+  phase_weight: 0.1
+
+data:
+  train_manifest: data/manifests/train.json
+  val_manifest: data/manifests/val.json
+  test_manifest: data/manifests/test.json
+  n_train_pairs: 20000
+  n_val_pairs: 2000
+  n_test_pairs: 1000
+  snr_range: [-5, 20]
+  rir_dir: data/rirs
+  rir_prob: 0.8
+  max_duration: 2.0
+
+checkpoint:
+  dir: checkpoints/
+  save_every: 5
+  keep_last: 3
+  metric: pesq
+
+logging:
+  log_dir: logs/
+  log_every: 100
+  eval_every: 1
