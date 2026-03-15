@@ -18,3 +18,4 @@ EOFcpp_inference/build/
 *.onnx
 *.onnx.data
 demo_portfolio.html
+cpp_inference/build/
